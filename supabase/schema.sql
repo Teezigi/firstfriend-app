@@ -293,3 +293,30 @@ begin
   return matched_count;
 end;
 $$;
+
+-- ─────────────────────────────────────────────
+-- EXPLICIT GRANTS
+-- Required from October 30, 2026 — Supabase stops auto-granting Data API
+-- access to new tables in `public`. Adding these explicitly now means every
+-- table here (and any future migration that follows this pattern) keeps
+-- working regardless of when it's actually run. RLS policies above still
+-- do the real access control; these grants just let the API reach the
+-- table at all. See: https://github.com/orgs/supabase/discussions/45329
+-- ─────────────────────────────────────────────
+grant usage on schema public to anon, authenticated, service_role;
+
+do $$
+declare
+  t text;
+begin
+  foreach t in array array[
+    'profiles', 'groups', 'group_members', 'availability_responses',
+    'meetups', 'rsvps', 'group_signals', 'post_meetup_feedback',
+    'connection_requests', 'safety_reports'
+  ]
+  loop
+    execute format('grant select on public.%I to anon', t);
+    execute format('grant select, insert, update, delete on public.%I to authenticated', t);
+    execute format('grant select, insert, update, delete on public.%I to service_role', t);
+  end loop;
+end $$;
