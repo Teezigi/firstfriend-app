@@ -1,5 +1,8 @@
 -- FirstFriend database schema
--- Run this once in Supabase: Project → SQL Editor → New query → paste → Run
+-- Supabase: Project → SQL Editor → New query → paste this whole file → Run
+-- Safe to re-run any time — every statement drops-and-recreates or uses
+-- "if not exists", so running it again never errors on things that already
+-- exist and never touches your actual data.
 
 -- ─────────────────────────────────────────────
 -- PROFILES
@@ -21,12 +24,15 @@ create table if not exists profiles (
 
 alter table profiles enable row level security;
 
+drop policy if exists "Users can view their own profile" on profiles;
 create policy "Users can view their own profile"
   on profiles for select using (auth.uid() = id);
 
+drop policy if exists "Users can insert their own profile" on profiles;
 create policy "Users can insert their own profile"
   on profiles for insert with check (auth.uid() = id);
 
+drop policy if exists "Users can update their own profile" on profiles;
 create policy "Users can update their own profile"
   on profiles for update using (auth.uid() = id);
 
@@ -46,8 +52,11 @@ create table if not exists groups (
 
 alter table groups enable row level security;
 alter table profiles
+  drop constraint if exists profiles_group_id_fkey;
+alter table profiles
   add constraint profiles_group_id_fkey foreign key (group_id) references groups(id);
 
+drop policy if exists "Members can view their own group" on groups;
 create policy "Members can view their own group"
   on groups for select using (
     id in (select group_id from profiles where id = auth.uid())
@@ -67,6 +76,7 @@ create table if not exists group_members (
 
 alter table group_members enable row level security;
 
+drop policy if exists "Members can view their own group's roster" on group_members;
 create policy "Members can view their own group's roster"
   on group_members for select using (
     group_id in (select group_id from profiles where id = auth.uid())
@@ -88,17 +98,20 @@ create table if not exists availability_responses (
 
 alter table availability_responses enable row level security;
 
+drop policy if exists "Members can view their own group's availability" on availability_responses;
 create policy "Members can view their own group's availability"
   on availability_responses for select using (
     group_id in (select group_id from profiles where id = auth.uid())
   );
 
+drop policy if exists "Members can submit their own availability" on availability_responses;
 create policy "Members can submit their own availability"
   on availability_responses for insert with check (
     profile_id = auth.uid()
     and group_id in (select group_id from profiles where id = auth.uid())
   );
 
+drop policy if exists "Members can delete their own availability" on availability_responses;
 create policy "Members can delete their own availability"
   on availability_responses for delete using (profile_id = auth.uid());
 
@@ -121,6 +134,7 @@ create table if not exists meetups (
 
 alter table meetups enable row level security;
 
+drop policy if exists "Members can view their own group's meetups" on meetups;
 create policy "Members can view their own group's meetups"
   on meetups for select using (
     group_id in (select group_id from profiles where id = auth.uid())
@@ -139,6 +153,7 @@ create table if not exists rsvps (
 
 alter table rsvps enable row level security;
 
+drop policy if exists "Members can view their own group's RSVPs" on rsvps;
 create policy "Members can view their own group's RSVPs"
   on rsvps for select using (
     meetup_id in (
@@ -148,9 +163,11 @@ create policy "Members can view their own group's RSVPs"
     )
   );
 
+drop policy if exists "Members can set their own RSVP" on rsvps;
 create policy "Members can set their own RSVP"
   on rsvps for insert with check (profile_id = auth.uid());
 
+drop policy if exists "Members can update their own RSVP" on rsvps;
 create policy "Members can update their own RSVP"
   on rsvps for update using (profile_id = auth.uid());
 
@@ -170,11 +187,13 @@ create table if not exists group_signals (
 
 alter table group_signals enable row level security;
 
+drop policy if exists "Members can view their own group's signals" on group_signals;
 create policy "Members can view their own group's signals"
   on group_signals for select using (
     group_id in (select group_id from profiles where id = auth.uid())
   );
 
+drop policy if exists "Members can send their own signals" on group_signals;
 create policy "Members can send their own signals"
   on group_signals for insert with check (
     profile_id = auth.uid()
@@ -197,9 +216,11 @@ create table if not exists post_meetup_feedback (
 
 alter table post_meetup_feedback enable row level security;
 
+drop policy if exists "Members can view only their own feedback" on post_meetup_feedback;
 create policy "Members can view only their own feedback"
   on post_meetup_feedback for select using (profile_id = auth.uid());
 
+drop policy if exists "Members can submit their own feedback" on post_meetup_feedback;
 create policy "Members can submit their own feedback"
   on post_meetup_feedback for insert with check (profile_id = auth.uid());
 
@@ -218,11 +239,13 @@ create table if not exists connection_requests (
 
 alter table connection_requests enable row level security;
 
+drop policy if exists "Users can view their own requests" on connection_requests;
 create policy "Users can view their own requests"
   on connection_requests for select using (
     requester_id = auth.uid() or target_id = auth.uid()
   );
 
+drop policy if exists "Users can create their own requests" on connection_requests;
 create policy "Users can create their own requests"
   on connection_requests for insert with check (requester_id = auth.uid());
 
@@ -244,9 +267,11 @@ create table if not exists safety_reports (
 
 alter table safety_reports enable row level security;
 
+drop policy if exists "Users can view their own reports" on safety_reports;
 create policy "Users can view their own reports"
   on safety_reports for select using (reporter_id = auth.uid());
 
+drop policy if exists "Users can create their own reports" on safety_reports;
 create policy "Users can create their own reports"
   on safety_reports for insert with check (reporter_id = auth.uid());
 
