@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FirstFriend — your first 30 days in a new city",
+  title: "FirstFriend: your first 30 days in a new city",
   description:
     "Just moved? Get matched into a small group of fellow newcomers and a real meetup within a week.",
 };

@@ -119,7 +119,7 @@ function OnboardingForm() {
       <h1 className="text-2xl font-bold leading-snug">
         {isMovingSoon
           ? "Tell us where you're headed"
-          : "Quick signal — who are you, where'd you land?"}
+          : "Quick signal: who are you, where'd you land?"}
       </h1>
       <p className="mt-2 text-sub text-[14.5px]">
         This is the only setup step. No profile essay, no swiping.

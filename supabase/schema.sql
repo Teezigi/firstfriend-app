@@ -1,6 +1,6 @@
 -- FirstFriend database schema
 -- Supabase: Project → SQL Editor → New query → paste this whole file → Run
--- Safe to re-run any time — every statement drops-and-recreates or uses
+-- Safe to re-run any time. Every statement drops-and-recreates or uses
 -- "if not exists", so running it again never errors on things that already
 -- exist and never touches your actual data.
 
@@ -84,7 +84,7 @@ create policy "Members can view their own group's roster"
 
 -- ─────────────────────────────────────────────
 -- AVAILABILITY RESPONSES
--- "When could you meet?" — multi-select per member.
+-- "When could you meet?" (multi-select per member).
 -- ─────────────────────────────────────────────
 create table if not exists availability_responses (
   group_id uuid not null references groups(id) on delete cascade,
@@ -173,7 +173,7 @@ create policy "Members can update their own RSVP"
 
 -- ─────────────────────────────────────────────
 -- GROUP SIGNALS
--- Lightweight coordination — not a chat feed. "I'm in", votes, "meet again".
+-- Lightweight coordination, not a chat feed. "I'm in", votes, "meet again".
 -- ─────────────────────────────────────────────
 create table if not exists group_signals (
   id uuid primary key default gen_random_uuid(),
@@ -202,7 +202,7 @@ create policy "Members can send their own signals"
 
 -- ─────────────────────────────────────────────
 -- POST-MEETUP FEEDBACK
--- Private — never shown to other group members.
+-- Private, never shown to other group members.
 -- ─────────────────────────────────────────────
 create table if not exists post_meetup_feedback (
   meetup_id uuid not null references meetups(id) on delete cascade,
@@ -226,7 +226,7 @@ create policy "Members can submit their own feedback"
 
 -- ─────────────────────────────────────────────
 -- CONNECTION REQUESTS
--- Day-30 "who would you like to stay connected with?" — contact only
+-- Day-30 "who would you like to stay connected with?" Contact only
 -- shared when both sides pick each other.
 -- ─────────────────────────────────────────────
 create table if not exists connection_requests (
@@ -278,7 +278,7 @@ create policy "Users can create their own reports"
 -- ─────────────────────────────────────────────
 -- MATCHING FUNCTION
 -- Groups up to 4 unmatched profiles that share an area + interest.
--- Called manually for now (see supabase/README.md) — a scheduled job
+-- Called manually for now (see supabase/README.md). A scheduled job
 -- comes later once there's real signup volume to justify it.
 -- ─────────────────────────────────────────────
 create or replace function try_form_groups()
@@ -321,7 +321,7 @@ $$;
 
 -- ─────────────────────────────────────────────
 -- EXPLICIT GRANTS
--- Required from October 30, 2026 — Supabase stops auto-granting Data API
+-- Required from October 30, 2026. Supabase stops auto-granting Data API
 -- access to new tables in `public`. Adding these explicitly now means every
 -- table here (and any future migration that follows this pattern) keeps
 -- working regardless of when it's actually run. RLS policies above still

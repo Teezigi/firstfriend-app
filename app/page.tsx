@@ -12,7 +12,7 @@ export default function Home() {
         </h1>
         <p className="mt-4 text-[15px] text-sub leading-relaxed">
           FirstFriend matches you into a small group of people who just moved
-          here too — and gets you to a real meetup within a week.
+          here too, and gets you to a real meetup within a week.
         </p>
 
         <div className="mt-8 flex flex-col gap-3">

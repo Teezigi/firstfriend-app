@@ -1,4 +1,4 @@
-# FirstFriend — Supabase setup
+# FirstFriend: Supabase setup
 
 ## One-time setup
 1. Open your Supabase project → **SQL Editor** → New query.
@@ -6,7 +6,7 @@
    row-level security policies, and the `try_form_groups()` matching function.
 
 ## Forming groups (for now)
-Group formation isn't on a schedule yet — it's a function you call manually
+Group formation isn't on a schedule yet. It's a function you call manually
 from the SQL Editor while there's no real signup volume to justify running it
 automatically:
 
@@ -19,7 +19,7 @@ This groups any 4+ unmatched profiles that share the same `area` and
 
 Once there's enough real traffic to make a recurring job worthwhile, this can
 move to a scheduled job (Supabase supports `pg_cron` for this) or a Vercel
-Cron job that calls a small API route — that's a five-minute change once it's
+Cron job that calls a small API route, which is a five-minute change once it's
 actually needed.
 
 ## Environment variables (Vercel)

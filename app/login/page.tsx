@@ -54,7 +54,7 @@ function LoginForm() {
       </div>
       <h1 className="text-2xl font-bold">What&apos;s your email?</h1>
       <p className="mt-2 text-sub text-[14.5px]">
-        No password needed — we&apos;ll email you a one-tap sign-in link.
+        No password needed. We&apos;ll email you a one-tap sign-in link.
       </p>
       <input
         type="email"

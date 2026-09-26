@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      // New or returning user — either way, onboarding checks whether
+      // New or returning user. Either way, onboarding checks whether
       // a profile already exists and skips ahead if so.
       return NextResponse.redirect(`${origin}/onboarding?path=${path}`);
     }

@@ -64,7 +64,7 @@ export default function WaitingPage() {
           .select("profile_id, passcode, profiles(display_name, arrival_status)")
           .eq("group_id", me.group_id);
         // Supabase's typed join can return an array or object depending on
-        // relationship inference — normalize to a single object here.
+        // relationship inference, normalize to a single object here.
         const normalized = (groupMembers ?? []).map((m) => ({
           ...m,
           profiles: Array.isArray(m.profiles) ? m.profiles[0] ?? null : m.profiles,
@@ -100,11 +100,11 @@ export default function WaitingPage() {
           <div className="text-xl font-extrabold mb-6">
             first<span className="text-coral">friend</span>
           </div>
-          <h1 className="text-2xl font-bold">You&apos;re in — meet your group</h1>
+          <h1 className="text-2xl font-bold">You&apos;re in: meet your group</h1>
           <p className="mt-2 text-sub text-[14.5px]">
             {others.length} other{others.length === 1 ? "" : "s"} who moved to{" "}
             {profile.area} recently and picked {profile.interest} too. No 1:1
-            matching — you&apos;re walking into a small group, together.
+            matching. You&apos;re walking into a small group, together.
           </p>
 
           <div className="mt-5 space-y-3">
@@ -137,14 +137,14 @@ export default function WaitingPage() {
                 {myPasscode}
               </div>
               <p className="mt-2 text-xs text-sub leading-relaxed">
-                Everyone in your group has their own code — a low-key way to
+                Everyone in your group has their own code, a low-key way to
                 check someone&apos;s meant to be there.
               </p>
             </div>
           )}
 
           <p className="mt-6 text-xs text-sub text-center">
-            Meetup scheduling is next — coming very soon.
+            Meetup scheduling is next, coming very soon.
           </p>
         </div>
       </div>
@@ -166,7 +166,7 @@ export default function WaitingPage() {
           We&apos;ll form your group as soon as there are four.
         </p>
         <p className="mt-4 text-xs text-sub">
-          No need to keep this open — refresh later to check.
+          No need to keep this open, refresh later to check.
         </p>
       </div>
     </div>
