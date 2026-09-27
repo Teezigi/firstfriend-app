@@ -1,6 +1,19 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Already signed in? Send them straight to their status instead of
+  // making them click through the splash and log in again.
+  if (user) {
+    redirect("/waiting");
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#fff7f0] via-[#ffe9e3] to-[#e8e4dd] px-6">
       <div className="max-w-md w-full text-center py-16">

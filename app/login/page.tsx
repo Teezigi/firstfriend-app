@@ -1,16 +1,34 @@
 "use client";
 
-import { useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 function LoginForm() {
+  const router = useRouter();
   const params = useSearchParams();
   const path = params.get("path") === "soon" ? "soon" : "here";
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
+
+  // Already have a valid session? Skip straight to status instead of
+  // asking for an email again.
+  useEffect(() => {
+    (async () => {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        router.replace("/waiting");
+        return;
+      }
+      setCheckingSession(false);
+    })();
+  }, [router]);
 
   async function sendLink(e: React.FormEvent) {
     e.preventDefault();
@@ -33,6 +51,8 @@ function LoginForm() {
       setSent(true);
     }
   }
+
+  if (checkingSession) return null;
 
   if (sent) {
     return (
