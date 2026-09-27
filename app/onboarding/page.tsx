@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import TownAutocomplete from "@/app/components/TownAutocomplete";
 
 const INTERESTS = [
   "🏃 Running",
@@ -70,7 +71,7 @@ function OnboardingForm() {
       return;
     }
     if (!area.trim()) {
-      setError("Let us know which area you're in.");
+      setError("Pick your town or city from the list so we can match you correctly.");
       return;
     }
     if (isMovingSoon && !moveDate) {
@@ -141,12 +142,9 @@ function OnboardingForm() {
         <label className="text-[12.5px] font-bold uppercase tracking-wide text-sub">
           {isMovingSoon ? "Where are you moving?" : "Your new city / area"}
         </label>
-        <input
-          value={area}
-          onChange={(e) => setArea(e.target.value)}
-          placeholder="e.g. Manchester"
-          className="mt-2 w-full px-4 py-3.5 rounded-2xl border-2 border-line bg-white text-[16px] focus:outline-none focus:border-coral"
-        />
+        <div className="mt-2">
+          <TownAutocomplete value={area} onChange={setArea} />
+        </div>
       </div>
 
       {isMovingSoon ? (
